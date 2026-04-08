@@ -678,6 +678,21 @@ impl FirmwareUI for UIDelizia {
         Err::<RootComponent<Empty, ModelUI>, Error>(Error::NotImplementedError)
     }
 
+    fn request_auto_lock_duration(
+        _title: TString<'static>,
+        _current_ms: u32,
+        _battery: bool,
+    ) -> Result<impl LayoutMaybeTrace, Error> {
+        Err::<RootComponent<Empty, ModelUI>, Error>(Error::NotImplementedError)
+    }
+
+    fn request_session_timeout(
+        _title: TString<'static>,
+        _current_ms: u32,
+    ) -> Result<impl LayoutMaybeTrace, Error> {
+        Err::<RootComponent<Empty, ModelUI>, Error>(Error::NotImplementedError)
+    }
+
     fn request_pin(
         prompt: TString<'static>,
         attempts: TString<'static>,
@@ -908,6 +923,7 @@ impl FirmwareUI for UIDelizia {
         _connected_idx: Option<u8>,
         _pin_enabled: Option<bool>,
         _auto_lock: Option<[TString<'static>; 2]>,
+        _session_timeout_str: Option<TString<'static>>,
         _wipe_code_enabled: Option<bool>,
         _backup_check_allowed: bool,
         _device_name: Option<TString<'static>>,

@@ -52,7 +52,8 @@ pub use tutorial_screen::{
 };
 pub use updatable_info_screen::{UpdatableInfoScreen, UpdatableInfoScreenMsg};
 pub use value_input_screen::{
-    DurationInput, NumberInput, ValueInput, ValueInputScreen, ValueInputScreenMsg,
+    AUTO_LOCK_BATT_STEPS_MS, AUTO_LOCK_USB_STEPS_MS, SESSION_TIMEOUT_STEPS_MS, DurationInput,
+    NumberInput, SteppedDurationInput, ValueInput, ValueInputScreen, ValueInputScreenMsg,
 };
 pub use vertical_menu::{
     LongMenuGc, MediumMenuVec, MenuItems, ShortMenuVec, VerticalMenu, VerticalMenuMsg,

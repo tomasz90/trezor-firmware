@@ -86,8 +86,9 @@ impl DeviceMenuScreen {
             DeviceMenuMsg::ToggleBluetooth => DeviceMenuId::Settings,
             DeviceMenuMsg::SetOrChangePin => DeviceMenuId::Security,
             DeviceMenuMsg::RemovePin => DeviceMenuId::Security,
-            DeviceMenuMsg::SetAutoLockBattery => DeviceMenuId::Security,
-            DeviceMenuMsg::SetAutoLockUSB => DeviceMenuId::Security,
+            DeviceMenuMsg::SetAutoLockBattery => DeviceMenuId::AutoLock,
+            DeviceMenuMsg::SetAutoLockUSB => DeviceMenuId::AutoLock,
+            DeviceMenuMsg::SetSessionTimeout => DeviceMenuId::AutoLock,
             DeviceMenuMsg::SetOrChangeWipeCode => DeviceMenuId::Security,
             DeviceMenuMsg::RemoveWipeCode => DeviceMenuId::Security,
             DeviceMenuMsg::CheckBackup => DeviceMenuId::Security,
@@ -291,6 +292,7 @@ impl DeviceMenuScreen {
         connected_idx: Option<u8>,
         pin_enabled: Option<bool>,
         auto_lock: Option<[TString<'static>; 2]>,
+        session_timeout_str: Option<TString<'static>>,
         wipe_code_enabled: Option<bool>,
         backup_check_allowed: bool,
         device_name: Option<TString<'static>>,
@@ -314,12 +316,14 @@ impl DeviceMenuScreen {
 
         if pin_enabled.is_some()
             || auto_lock.is_some()
+            || session_timeout_str.is_some()
             || wipe_code_enabled.is_some()
             || backup_check_allowed
         {
             screen.register_security_menu(
                 pin_enabled,
                 auto_lock,
+                session_timeout_str,
                 wipe_code_enabled,
                 backup_check_allowed,
             );
@@ -384,12 +388,15 @@ impl DeviceMenuScreen {
         let pin_unset = pin_enabled == Some(false);
         screen.register_root_menu(backup_failed, backup_needed, pin_unset, connected_subtext);
 
-        // Activate the init submenu
+        // Activate the init submenu (fall back to Root if the requested submenu is not registered)
         let init_submenu_id = init_submenu_idx
             .and_then(DeviceMenuId::from_u8)
             .unwrap_or_default();
 
-        let init_subscreen = unwrap!(screen.try_resolve_submenu(init_submenu_id));
+        let init_subscreen = screen
+            .try_resolve_submenu(init_submenu_id)
+            .or_else(|| screen.try_resolve_submenu(DeviceMenuId::Root))
+            .unwrap_or(0);
         screen.set_active_subscreen(init_subscreen);
 
         Ok(screen)
@@ -535,7 +542,11 @@ impl DeviceMenuScreen {
         self.register_submenu(id, Submenu::new(items));
     }
 
-    fn register_auto_lock_menu(&mut self, auto_lock_delay: [TString<'static>; 2]) {
+    fn register_auto_lock_menu(
+        &mut self,
+        auto_lock_delay: [TString<'static>; 2],
+        session_timeout_str: Option<TString<'static>>,
+    ) {
         let mut items: Vec<MenuItem, MEDIUM_MENU_ITEMS> = Vec::new();
         let battery_delay = MenuItem::new(
             auto_lock_delay[0],
@@ -551,6 +562,16 @@ impl DeviceMenuScreen {
         .with_subtext(Some((TR::auto_lock__on_usb.into(), None)));
         items.add(usb_delay);
 
+        if let Some(timeout_str) = session_timeout_str {
+            // Display like autolock items: value (duration) as title, "Session" as subtext
+            let session_item = MenuItem::new(
+                timeout_str,
+                Some(Action::Return(DeviceMenuMsg::SetSessionTimeout)),
+            )
+            .with_subtext(Some((TR::session_timeout__title.into(), None)));
+            items.add(session_item);
+        }
+
         self.register_submenu(DeviceMenuId::AutoLock, Submenu::new(items));
     }
 
@@ -558,6 +579,7 @@ impl DeviceMenuScreen {
         &mut self,
         pin_code: Option<bool>,
         auto_lock_delay: Option<[TString<'static>; 2]>,
+        session_timeout_str: Option<TString<'static>>,
         wipe_code: Option<bool>,
         check_backup: bool,
     ) {
@@ -580,7 +602,7 @@ impl DeviceMenuScreen {
         }
 
         if let Some(auto_lock_delay) = auto_lock_delay {
-            self.register_auto_lock_menu(auto_lock_delay);
+            self.register_auto_lock_menu(auto_lock_delay, session_timeout_str);
             let auto_lock_delay_item =
                 MenuItem::go_to_submenu(TR::auto_lock__title.into(), DeviceMenuId::AutoLock);
             items.add(auto_lock_delay_item);

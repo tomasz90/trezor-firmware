@@ -62,6 +62,17 @@ def get_auto_lock_delay() -> tuple[str, str] | None:
     return (autolock_delay_batt_fmg, autolock_delay_usb_fmt)
 
 
+def get_session_timeout_str() -> str | None:
+    from trezor import strings
+
+    if not config.has_pin():
+        return None
+    ms = storage_device.get_session_timeout_ms()
+    if ms == 0:
+        return TR.words__off
+    return strings.format_autolock_duration(ms)
+
+
 def ble_enable(enable: bool) -> None:
     ble.set_enabled(enable)
     storage_device.set_ble(enable)
@@ -116,7 +127,6 @@ async def handle_device_menu() -> None:
 
         firmware_type = "Bitcoin-only" if utils.BITCOIN_ONLY else "Universal"
         production_year = _get_production_year()
-
         menu_result = await interact(
             trezorui_api.show_device_menu(
                 init_submenu_idx=init_submenu_idx,
@@ -127,6 +137,7 @@ async def handle_device_menu() -> None:
                 connected_idx=connected_idx,
                 pin_enabled=config.has_pin() if is_initialized else None,
                 auto_lock=get_auto_lock_delay(),
+                session_timeout_str=get_session_timeout_str(),
                 wipe_code_enabled=(
                     config.has_wipe_code()
                     if (is_initialized and config.has_pin())
@@ -301,26 +312,18 @@ async def handle_SetAutoLockUSB() -> None:
 
     utils.ensure(config.has_pin())
 
-    duration_ms = storage_device.get_autolock_delay_ms()
-    min_ms = storage_device.AUTOLOCK_DELAY_USB_MIN_MS
-    max_ms = storage_device.AUTOLOCK_DELAY_USB_MAX_MS
-
     auto_lock_delay_ms = await interact(
         trezorui_api.request_duration(
             title=TR.auto_lock__title,
-            duration_ms=duration_ms,
-            min_ms=min_ms,
-            max_ms=max_ms,
+            duration_ms=storage_device.get_autolock_delay_ms(),
+            min_ms=storage_device.AUTOLOCK_DELAY_USB_MIN_MS,
+            max_ms=storage_device.AUTOLOCK_DELAY_USB_MAX_MS,
             description=TR.auto_lock__description,
         ),
         br_name=None,
     )
-    # Necessary for the style check not to raise type error
     assert isinstance(auto_lock_delay_ms, int)
-    settings = ApplySettings(
-        auto_lock_delay_ms=auto_lock_delay_ms,
-    )
-    await apply_settings(settings)
+    await apply_settings(ApplySettings(auto_lock_delay_ms=auto_lock_delay_ms))
 
 
 async def handle_SetAutoLockBattery() -> None:
@@ -330,26 +333,49 @@ async def handle_SetAutoLockBattery() -> None:
 
     utils.ensure(config.has_pin())
 
-    duration_ms = storage_device.get_autolock_delay_battery_ms()
-    min_ms = storage_device.AUTOLOCK_DELAY_BATT_MIN_MS
-    max_ms = storage_device.AUTOLOCK_DELAY_BATT_MAX_MS
-
     auto_lock_delay_ms = await interact(
         trezorui_api.request_duration(
             title=TR.auto_lock__title,
-            duration_ms=duration_ms,
-            min_ms=min_ms,
-            max_ms=max_ms,
+            duration_ms=storage_device.get_autolock_delay_battery_ms(),
+            min_ms=storage_device.AUTOLOCK_DELAY_BATT_MIN_MS,
+            max_ms=storage_device.AUTOLOCK_DELAY_BATT_MAX_MS,
             description=TR.auto_lock__description,
         ),
         br_name=None,
     )
-    # Necessary for the style check not to raise type error
     assert isinstance(auto_lock_delay_ms, int)
-    settings = ApplySettings(
-        auto_lock_delay_battery_ms=auto_lock_delay_ms,
+    await apply_settings(ApplySettings(auto_lock_delay_battery_ms=auto_lock_delay_ms))
+
+
+async def handle_SetSessionTimeout() -> None:
+    from trezor.enums import ButtonRequestType
+
+    from apps.common.lock_manager import reload_settings_from_storage
+
+    utils.ensure(config.has_pin())
+
+    session_timeout_ms = await interact(
+        trezorui_api.request_session_timeout(
+            title=TR.session_timeout__title,
+            current_ms=storage_device.get_session_timeout_ms(),
+        ),
+        br_name=None,
     )
-    await apply_settings(settings)
+    assert isinstance(session_timeout_ms, int)
+    if session_timeout_ms > 0:
+        await raise_if_not_confirmed(
+            trezorui_api.confirm_action(
+                title=TR.session_timeout__title,
+                action=None,
+                description=TR.session_timeout__confirm_desc,
+                verb=TR.buttons__confirm,
+            ),
+            "set_session_timeout",
+            ButtonRequestType.ProtectCall,
+        )
+    storage_device.set_session_timeout_ms(session_timeout_ms)
+    reload_settings_from_storage()
+    utils.notify_send(utils.NOTIFY_SETTING_CHANGE)
 
 
 async def handle_SetOrChangeWipeCode() -> None:
@@ -482,6 +508,7 @@ _MENU_HANDLERS = {
     DeviceMenuResult.RemovePin: handle_RemovePin,
     DeviceMenuResult.SetAutoLockUSB: handle_SetAutoLockUSB,
     DeviceMenuResult.SetAutoLockBattery: handle_SetAutoLockBattery,
+    DeviceMenuResult.SetSessionTimeout: handle_SetSessionTimeout,
     DeviceMenuResult.SetOrChangeWipeCode: handle_SetOrChangeWipeCode,
     DeviceMenuResult.RemoveWipeCode: handle_RemoveWipeCode,
     DeviceMenuResult.CheckBackup: handle_CheckBackup,

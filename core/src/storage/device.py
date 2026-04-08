@@ -52,6 +52,7 @@ _DISABLE_BLUETOOTH        = const(0x24)  # bool (0x01 or empty)
 if not utils.BITCOIN_ONLY:
     _BINARY_MNEMONIC = const(0x25)  # bytes
 _DELEGATED_IDENTITY_KEY_ROTATION_INDEX = const(0x26)  # int
+_SESSION_TIMEOUT_MS        = const(0x27)  # int (0 = disabled)
 
 
 SAFETY_CHECK_LEVEL_STRICT  : Literal[0] = const(0)
@@ -76,7 +77,7 @@ if utils.USE_POWER_MANAGER:
     AUTODIM_DELAY_MS = 30 * 1000  # 30 seconds
     AUTOLOCK_DELAY_BATT_MIN_MS = 30 * 1000  # 30 seconds
     AUTOLOCK_DELAY_BATT_DEFAULT_MS = const(40 * 1000)  # 40 seconds
-    AUTOLOCK_DELAY_BATT_MAX_MS = const(10 * 60 * 1000)  # 10 minutes
+    AUTOLOCK_DELAY_BATT_MAX_MS = const(60 * 60 * 1000)  # 1 hour
 
 
 # Length of SD salt auth tag.
@@ -329,6 +330,28 @@ def get_autolock_delay_ms() -> int:
 def set_autolock_delay_ms(delay_ms: int) -> None:
     delay_ms = _normalize_autolock_delay(delay_ms)
     common.set(_NAMESPACE, _AUTOLOCK_DELAY_MS, delay_ms.to_bytes(4, "big"))
+
+
+_SESSION_TIMEOUT_MIN_MS = const(5 * 60 * 1000)  # 5 minutes — smallest valid step
+
+
+def get_session_timeout_ms() -> int:
+    b = common.get(_NAMESPACE, _SESSION_TIMEOUT_MS)
+    if b is None:
+        return 0
+    value = int.from_bytes(b, "big")
+    # Migrate old boolean-style storage (1 = "enabled") — treat as OFF.
+    if 0 < value < _SESSION_TIMEOUT_MIN_MS:
+        common.delete(_NAMESPACE, _SESSION_TIMEOUT_MS)
+        return 0
+    return value
+
+
+def set_session_timeout_ms(timeout_ms: int) -> None:
+    if timeout_ms == 0:
+        common.delete(_NAMESPACE, _SESSION_TIMEOUT_MS)
+    else:
+        common.set(_NAMESPACE, _SESSION_TIMEOUT_MS, timeout_ms.to_bytes(4, "big"))
 
 
 if utils.USE_POWER_MANAGER:

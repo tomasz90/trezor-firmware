@@ -2176,6 +2176,24 @@
       "Delizia": "Wrong SD card.",
       "Eckhart": ""
     },
+    "session_timeout__info": {
+      "Bolt": "",
+      "Caesar": "",
+      "Delizia": "",
+      "Eckhart": "Session will ease doing sequence of transactions. Set the time after Trezor will lock itself."
+    },
+    "session_timeout__title": {
+      "Bolt": "",
+      "Caesar": "",
+      "Delizia": "",
+      "Eckhart": "Session"
+    },
+    "session_timeout__confirm_desc": {
+      "Bolt": "",
+      "Caesar": "",
+      "Delizia": "",
+      "Eckhart": "Do you want to enable session? This mode is useful to make a sequence of transactions without the need to re-enter PIN. It will also change behavior of Trezor, clicking power button, will only lock the screen, to lock device hold power button for 1 second."
+    },
     "send__cancel_sign": "Cancel sign",
     "send__cancel_transaction": "Cancel transaction",
     "send__confirm_sending": "Sending amount",

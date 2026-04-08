@@ -1205,5 +1205,8 @@
   "1203": "ethereum__withdraw",
   "1204": "ethereum__withdraw_from",
   "1205": "ethereum__withdraw_intro",
-  "1206": "ethereum__your_address"
+  "1206": "ethereum__your_address",
+  "1207": "session_timeout__title",
+  "1208": "session_timeout__info",
+  "1209": "session_timeout__confirm_desc"
 }

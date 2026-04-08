@@ -1607,6 +1607,9 @@ pub enum TranslatedString {
     ethereum__withdraw_intro = 1205,  // "Review details to withdraw from vault."
     #[cfg(feature = "universal_fw")]
     ethereum__your_address = 1206,  // "Your address"
+    session_timeout__title = 1207,  // {"Bolt": "", "Caesar": "", "Delizia": "", "Eckhart": "Session"}
+    session_timeout__info = 1208,  // {"Bolt": "", "Caesar": "", "Delizia": "", "Eckhart": "Keep device unlocked, so you can complete a sequence of transactions without re-entering your PIN. Auto-lock still applies. Hold power button to lock immediately."}
+    session_timeout__confirm_desc = 1209,  // {"Bolt": "", "Caesar": "", "Delizia": "", "Eckhart": "Do you want to enable session? This mode is useful to make a sequence of transactions without the need to re-enter PIN. It will also change behavior of Trezor, clicking power button, will only lock the screen, to lock device hold power button for 1 second."}
 }
 
 impl TranslatedString {
@@ -2821,6 +2824,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(feature = "debug", feature = "universal_fw"))]
@@ -4033,6 +4039,9 @@ impl TranslatedString {
                 21828,
                 21866,
                 21878,
+                21878,
+                21878,
+                21878,
             ];
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -5244,6 +5253,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -6456,6 +6468,9 @@ impl TranslatedString {
                 21828,
                 21866,
                 21878,
+                21878,
+                21878,
+                21878,
             ];
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -7667,6 +7682,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -8879,6 +8897,9 @@ impl TranslatedString {
                 21828,
                 21866,
                 21878,
+                21878,
+                21878,
+                21878,
             ];
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -10090,6 +10111,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -11301,6 +11325,9 @@ impl TranslatedString {
                 21815,
                 21828,
                 21866,
+                21878,
+                21878,
+                21878,
                 21878,
             ];
 
@@ -12514,6 +12541,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(feature = "debug", feature = "universal_fw"))]
@@ -13726,6 +13756,9 @@ impl TranslatedString {
                 19056,
                 19094,
                 19106,
+                19106,
+                19106,
+                19106,
             ];
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -14937,6 +14970,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -16149,6 +16185,9 @@ impl TranslatedString {
                 19056,
                 19094,
                 19106,
+                19106,
+                19106,
+                19106,
             ];
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -17360,6 +17399,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -18572,6 +18614,9 @@ impl TranslatedString {
                 19056,
                 19094,
                 19106,
+                19106,
+                19106,
+                19106,
             ];
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -19783,6 +19828,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -20994,6 +21042,9 @@ impl TranslatedString {
                 19043,
                 19056,
                 19094,
+                19106,
+                19106,
+                19106,
                 19106,
             ];
 
@@ -22207,6 +22258,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(feature = "debug", feature = "universal_fw"))]
@@ -23419,6 +23473,9 @@ impl TranslatedString {
                 20912,
                 20950,
                 20962,
+                20962,
+                20962,
+                20962,
             ];
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -24630,6 +24687,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -25842,6 +25902,9 @@ impl TranslatedString {
                 20912,
                 20950,
                 20962,
+                20962,
+                20962,
+                20962,
             ];
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -27053,6 +27116,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -28265,6 +28331,9 @@ impl TranslatedString {
                 20912,
                 20950,
                 20962,
+                20962,
+                20962,
+                20962,
             ];
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -29476,6 +29545,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -30687,6 +30759,9 @@ impl TranslatedString {
                 20899,
                 20912,
                 20950,
+                20962,
+                20962,
+                20962,
                 20962,
             ];
 
@@ -31900,6 +31975,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "Session",
+                "Auto-lock after no activity",
+                "Do you want to enable session? This mode is useful to make a sequence of transactions without the need to re-enter PIN. It will also change behavior of Trezor, clicking power button, will only lock the screen, to lock device hold power button for 1 second.",
             );
 
             #[cfg(all(feature = "debug", feature = "universal_fw"))]
@@ -33112,6 +33190,9 @@ impl TranslatedString {
                 21839,
                 21877,
                 21889,
+                21896,
+                21923,
+                22179,
             ];
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -34323,6 +34404,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "Session",
+                "Auto-lock after no activity",
+                "Do you want to enable session? This mode is useful to make a sequence of transactions without the need to re-enter PIN. It will also change behavior of Trezor, clicking power button, will only lock the screen, to lock device hold power button for 1 second.",
             );
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -35535,6 +35619,9 @@ impl TranslatedString {
                 21839,
                 21877,
                 21889,
+                21896,
+                21923,
+                22179,
             ];
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -36746,6 +36833,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "Session",
+                "Auto-lock after no activity",
+                "Do you want to enable session? This mode is useful to make a sequence of transactions without the need to re-enter PIN. It will also change behavior of Trezor, clicking power button, will only lock the screen, to lock device hold power button for 1 second.",
             );
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -37958,6 +38048,9 @@ impl TranslatedString {
                 21839,
                 21877,
                 21889,
+                21896,
+                21923,
+                22179,
             ];
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -39169,6 +39262,9 @@ impl TranslatedString {
                 "Withdraw from",
                 "Review details to withdraw from vault.",
                 "Your address",
+                "Session",
+                "Auto-lock after no activity",
+                "Do you want to enable session? This mode is useful to make a sequence of transactions without the need to re-enter PIN. It will also change behavior of Trezor, clicking power button, will only lock the screen, to lock device hold power button for 1 second.",
             );
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -40381,6 +40477,9 @@ impl TranslatedString {
                 21839,
                 21877,
                 21889,
+                21896,
+                21923,
+                22179,
             ];
 
         }
@@ -41570,6 +41669,9 @@ impl TranslatedString {
         (Qstr::MP_QSTR_send__transaction_id, Self::send__transaction_id),
         (Qstr::MP_QSTR_send__transaction_signed, Self::send__transaction_signed),
         (Qstr::MP_QSTR_send__you_are_contributing, Self::send__you_are_contributing),
+        (Qstr::MP_QSTR_session_timeout__title, Self::session_timeout__title),
+        (Qstr::MP_QSTR_session_timeout__info, Self::session_timeout__info),
+        (Qstr::MP_QSTR_session_timeout__confirm_desc, Self::session_timeout__confirm_desc),
         (Qstr::MP_QSTR_setting__adjust, Self::setting__adjust),
         (Qstr::MP_QSTR_setting__apply, Self::setting__apply),
         (Qstr::MP_QSTR_share_words__words_in_order, Self::share_words__words_in_order),

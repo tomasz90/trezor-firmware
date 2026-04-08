@@ -64,6 +64,7 @@ static void _librust_qstrs(void) {
   MP_QSTR_SetDeviceName;
   MP_QSTR_SetOrChangePin;
   MP_QSTR_SetOrChangeWipeCode;
+  MP_QSTR_SetSessionTimeout;
   MP_QSTR_TR;
   MP_QSTR_TRANSITIONING;
   MP_QSTR_TX_PACKET_LEN;
@@ -308,6 +309,7 @@ static void _librust_qstrs(void) {
   MP_QSTR_count;
   MP_QSTR_coveragedata;
   MP_QSTR_current;
+  MP_QSTR_current_ms;
   MP_QSTR_danger;
   MP_QSTR_data_hash;
   MP_QSTR_data_len;
@@ -638,12 +640,15 @@ static void _librust_qstrs(void) {
   MP_QSTR_regulatory__title;
   MP_QSTR_reject_pairing;
   MP_QSTR_remaining_shares;
+  MP_QSTR_battery;
+  MP_QSTR_request_auto_lock_duration;
   MP_QSTR_request_bip39;
   MP_QSTR_request_complete_repaint;
   MP_QSTR_request_duration;
   MP_QSTR_request_number;
   MP_QSTR_request_passphrase;
   MP_QSTR_request_pin;
+  MP_QSTR_request_session_duration;
   MP_QSTR_request_slip39;
   MP_QSTR_request_string;
   MP_QSTR_reset__advanced_group_threshold_info;
@@ -803,6 +808,9 @@ static void _librust_qstrs(void) {
   MP_QSTR_send__transaction_id;
   MP_QSTR_send__transaction_signed;
   MP_QSTR_send__you_are_contributing;
+  MP_QSTR_session_enabled;
+  MP_QSTR_session_timeout__info;
+  MP_QSTR_session_timeout__title;
   MP_QSTR_set_brightness;
   MP_QSTR_set_enabled;
   MP_QSTR_set_high_speed;

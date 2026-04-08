@@ -253,6 +253,17 @@ pub trait FirmwareUI {
         description: Option<TString<'static>>,
     ) -> Result<impl LayoutMaybeTrace, Error>;
 
+    fn request_auto_lock_duration(
+        title: TString<'static>,
+        current_ms: u32,
+        battery: bool,
+    ) -> Result<impl LayoutMaybeTrace, Error>;
+
+    fn request_session_timeout(
+        title: TString<'static>,
+        current_ms: u32,
+    ) -> Result<impl LayoutMaybeTrace, Error>;
+
     fn request_pin(
         prompt: TString<'static>,
         subprompt: TString<'static>,
@@ -346,6 +357,7 @@ pub trait FirmwareUI {
         connected_idx: Option<u8>,
         pin_enabled: Option<bool>,
         auto_lock: Option<[TString<'static>; 2]>,
+        session_timeout_str: Option<TString<'static>>,
         wipe_code_enabled: Option<bool>,
         backup_check_allowed: bool,
         device_name: Option<TString<'static>>,

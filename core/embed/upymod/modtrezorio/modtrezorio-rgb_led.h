@@ -32,10 +32,23 @@ STATIC mp_obj_t mod_trezorio_rgb_led_set_enabled(mp_obj_t enable) {
 STATIC MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_rgb_led_set_enabled_obj,
                                  mod_trezorio_rgb_led_set_enabled);
 
+/// def rgb_led_set_color(color: int) -> None:
+///     """
+///     Set the RGB LED color. color is 0x00RRGGBB. 0 turns off the LED.
+///     """
+STATIC mp_obj_t mod_trezorio_rgb_led_set_color(mp_obj_t color) {
+  rgb_led_set_color((uint32_t)mp_obj_get_int(color));
+  return mp_const_none;
+}
+STATIC MP_DEFINE_CONST_FUN_OBJ_1(mod_trezorio_rgb_led_set_color_obj,
+                                 mod_trezorio_rgb_led_set_color);
+
 STATIC const mp_rom_map_elem_t mod_trezorio_rgb_led_globals_table[] = {
     {MP_ROM_QSTR(MP_QSTR___name__), MP_ROM_QSTR(MP_QSTR_rgb_led)},
     {MP_ROM_QSTR(MP_QSTR_rgb_led_set_enabled),
      MP_ROM_PTR(&mod_trezorio_rgb_led_set_enabled_obj)},
+    {MP_ROM_QSTR(MP_QSTR_rgb_led_set_color),
+     MP_ROM_PTR(&mod_trezorio_rgb_led_set_color_obj)},
 
 };
 STATIC MP_DEFINE_CONST_DICT(mod_trezorio_rgb_led_globals,

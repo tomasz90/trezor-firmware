@@ -21,9 +21,24 @@ if TYPE_CHECKING:
 _SCREENSAVER_IS_ON = False
 
 
+def _session_is_valid() -> bool:
+    """Return True if a session is configured and the device is unlocked.
+
+    The idle timer (set to session_timeout_ms) handles expiry by locking the
+    device after inactivity. This function only checks whether the session
+    feature is enabled and the device is currently unlocked.
+    """
+    if not storage_device.get_session_timeout_ms():
+        return False
+    return config.is_unlocked()
+
+
 if not utils.USE_POWER_MANAGER:
 
     def notify_suspend() -> None:
+        pass
+
+    def signal_long_press_lock() -> None:
         pass
 
 else:
@@ -31,7 +46,29 @@ else:
 
     _SHOULD_SUSPEND = False
     _notify_power_button: loop.mailbox[None] = loop.mailbox()
+    _notify_long_press_lock: loop.mailbox[None] = loop.mailbox()
     notify_bootscreen: loop.mailbox[None] = loop.mailbox()
+
+    # RGBLED_RED = RGB_COMPOSE_COLOR(100, 6, 3)
+    _RGBLED_RED: int = (100 << 16) | (6 << 8) | 3
+
+    def signal_long_press_lock() -> None:
+        """Called from UI event handler to schedule async lock (avoids re-entrancy crash)."""
+        _notify_long_press_lock.put(None, replace=True)
+
+    async def _long_press_handler() -> None:
+        """Handles long power button press: blink red LED (if session ON) and lock, all async-safe."""
+        while True:
+            await _notify_long_press_lock
+            if utils.USE_RGB_LED and _session_is_valid():
+                io.rgb_led.rgb_led_set_color(_RGBLED_RED)
+                await loop.sleep(150)
+                io.rgb_led.rgb_led_set_color(0)
+                await loop.sleep(100)
+                io.rgb_led.rgb_led_set_color(_RGBLED_RED)
+                await loop.sleep(150)
+                io.rgb_led.rgb_led_set_color(0)
+            lock_device_if_unlocked()
 
     def _schedule_suspend_after_workflow() -> None:
         """Signal that the device should be suspended by the default task after the
@@ -54,10 +91,18 @@ else:
         _notify_power_button.put(None, replace=True)
 
     async def _power_handler() -> None:
-        """Handler for the notify_suspend signal."""
+        """Handler for the notify_suspend signal (short power button press)."""
         while True:
             await _notify_power_button
-            lock_device_if_unlocked()
+            if _session_is_valid():
+                # Session active: sleep without locking
+                if not utils.EMULATOR:
+                    if workflow.autolock_interrupts_workflow:
+                        suspend_and_resume()
+                    else:
+                        _schedule_suspend_after_workflow()
+            else:
+                lock_device_if_unlocked()
 
     def suspend_and_resume() -> None:
         """Suspend Trezor and handle wakeup.
@@ -95,9 +140,29 @@ else:
         """
         suspend_and_resume()
 
+    def _do_suspend() -> None:
+        """Suspend the screen (no PIN required on wake)."""
+        if workflow.autolock_interrupts_workflow:
+            suspend_and_resume()
+        else:
+            _schedule_suspend_after_workflow()
+
+    def _autolock_usb() -> None:
+        """USB idle timeout: suspend screen if session is active, lock device if not."""
+        if _session_is_valid():
+            if not utils.EMULATOR:
+                _do_suspend()
+        else:
+            lock_device_if_unlocked()
+
     def lock_device_if_unlocked_on_battery() -> None:
-        """Lock the device if it is unlocked and running on battery or wireless charger."""
-        if not io.pm.is_usb_connected():
+        """Battery idle timeout: suspend screen if session is active, lock device if not."""
+        if io.pm.is_usb_connected():
+            return
+        if _session_is_valid():
+            if not utils.EMULATOR:
+                _do_suspend()
+        else:
             lock_device_if_unlocked()
 
     def configure_autodim() -> None:
@@ -215,12 +280,24 @@ def _pinlock_filter(msg_type: int, prev_handler: Handler[Msg]) -> Handler[Msg]:
 
 
 # this function is also called when handling ApplySettings
+def _lock_on_session_timeout() -> None:
+    """Lock the device when the session idle timer expires."""
+    lock_device_if_unlocked()
+
+
 def reload_settings_from_storage() -> None:
     from trezor import ui
 
-    workflow.idle_timer.set(
-        storage_device.get_autolock_delay_ms(), lock_device_if_unlocked
-    )
+    if utils.USE_POWER_MANAGER:
+        # On T3W1: USB autolock suspends screen when session active, locks when not.
+        workflow.idle_timer.set(storage_device.get_autolock_delay_ms(), _autolock_usb)
+        session_ms = storage_device.get_session_timeout_ms()
+        if session_ms > 0:
+            workflow.idle_timer.set(session_ms, _lock_on_session_timeout)
+        else:
+            workflow.idle_timer.remove(_lock_on_session_timeout)
+    else:
+        workflow.idle_timer.set(storage_device.get_autolock_delay_ms(), lock_device_if_unlocked)
 
     if utils.USE_POWER_MANAGER:
         configure_autodim()
@@ -246,3 +323,4 @@ def boot() -> None:
     set_homescreen()
     if utils.USE_POWER_MANAGER:
         loop.schedule(_power_handler())
+        loop.schedule(_long_press_handler())

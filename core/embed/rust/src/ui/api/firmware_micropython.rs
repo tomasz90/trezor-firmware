@@ -690,6 +690,35 @@ extern "C" fn new_request_duration(n_args: usize, args: *const Obj, kwargs: *mut
     unsafe { util::try_with_args_and_kwargs(n_args, args, kwargs, block) }
 }
 
+extern "C" fn new_request_auto_lock_duration(
+    n_args: usize,
+    args: *const Obj,
+    kwargs: *mut Map,
+) -> Obj {
+    let block = move |_args: &[Obj], kwargs: &Map| {
+        let title: TString = kwargs.get(Qstr::MP_QSTR_title)?.try_into()?;
+        let current_ms: u32 = kwargs.get(Qstr::MP_QSTR_current_ms)?.try_into()?;
+        let battery: bool = kwargs.get_or(Qstr::MP_QSTR_battery, false)?;
+        let layout = ModelUI::request_auto_lock_duration(title, current_ms, battery)?;
+        Ok(LayoutObj::new_root(layout)?.into())
+    };
+    unsafe { util::try_with_args_and_kwargs(n_args, args, kwargs, block) }
+}
+
+extern "C" fn new_request_session_timeout(
+    n_args: usize,
+    args: *const Obj,
+    kwargs: *mut Map,
+) -> Obj {
+    let block = move |_args: &[Obj], kwargs: &Map| {
+        let title: TString = kwargs.get(Qstr::MP_QSTR_title)?.try_into()?;
+        let current_ms: u32 = kwargs.get(Qstr::MP_QSTR_current_ms)?.try_into()?;
+        let layout = ModelUI::request_session_timeout(title, current_ms)?;
+        Ok(LayoutObj::new_root(layout)?.into())
+    };
+    unsafe { util::try_with_args_and_kwargs(n_args, args, kwargs, block) }
+}
+
 extern "C" fn new_request_pin(n_args: usize, args: *const Obj, kwargs: *mut Map) -> Obj {
     let block = move |_args: &[Obj], kwargs: &Map| {
         let prompt: TString = kwargs.get(Qstr::MP_QSTR_prompt)?.try_into()?;
@@ -933,6 +962,8 @@ extern "C" fn new_show_device_menu(n_args: usize, args: *const Obj, kwargs: *mut
             .try_into_option()?
             .map(util::iter_into_array)
             .transpose()?;
+        let session_timeout_str: Option<TString> =
+            kwargs.get(Qstr::MP_QSTR_session_timeout_str)?.try_into_option()?;
         let wipe_code_enabled: Option<bool> = kwargs
             .get(Qstr::MP_QSTR_wipe_code_enabled)?
             .try_into_option()?;
@@ -959,6 +990,7 @@ extern "C" fn new_show_device_menu(n_args: usize, args: *const Obj, kwargs: *mut
             connected_idx,
             pin_enabled,
             auto_lock,
+            session_timeout_str,
             wipe_code_enabled,
             backup_check_allowed,
             device_name,
@@ -1806,6 +1838,23 @@ pub static mp_module_trezorui_api: Module = obj_module! {
     ///     """Duration input with + and - buttons, optional static description. """
     Qstr::MP_QSTR_request_duration => obj_fn_kw!(0, new_request_duration).as_obj(),
 
+    /// def request_auto_lock_duration(
+    ///     *,
+    ///     title: str,
+    ///     current_ms: int,
+    ///     battery: bool = False,
+    /// ) -> LayoutObj[tuple[UiResult, int]]:
+    ///     """Stepped duration picker for auto-lock (battery or USB presets)."""
+    Qstr::MP_QSTR_request_auto_lock_duration => obj_fn_kw!(0, new_request_auto_lock_duration).as_obj(),
+
+    /// def request_session_timeout(
+    ///     *,
+    ///     title: str,
+    ///     current_ms: int,
+    /// ) -> LayoutObj[tuple[UiResult, int]]:
+    ///     """Stepped duration picker for session timeout (OFF, 5m … 1h)."""
+    Qstr::MP_QSTR_request_session_timeout => obj_fn_kw!(0, new_request_session_timeout).as_obj(),
+
     /// def request_pin(
     ///     *,
     ///     prompt: str,
@@ -1940,6 +1989,7 @@ pub static mp_module_trezorui_api: Module = obj_module! {
     ///     connected_idx: int | None,
     ///     pin_enabled: bool | None,
     ///     auto_lock: tuple[str, str] | None,
+    ///     session_timeout_str: str | None,
     ///     wipe_code_enabled: bool | None,
     ///     backup_check_allowed: bool,
     ///     device_name: str | None,

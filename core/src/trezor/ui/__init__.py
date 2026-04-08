@@ -113,12 +113,39 @@ def set_current_layout(layout: "Layout | ProgressLayout | None") -> None:
 
 
 if utils.USE_POWER_MANAGER:
+    import utime as _utime
+
+    _power_btn_down_ms: int = 0
+    _power_btn_held: bool = False
+    _POWER_BTN_HOLD_LOCK_MS: int = 750
+    # RGBLED_RED = RGB_COMPOSE_COLOR(100, 6, 3)
+    _POWER_HOLD_RGBLED_RED: int = (100 << 16) | (6 << 8) | 3
+
+    async def _power_hold_feedback() -> None:
+        """Blinks LED red at 750ms threshold to signal user can release (only when unlocked)."""
+        await loop.sleep(_POWER_BTN_HOLD_LOCK_MS)
+        if not _power_btn_held:
+            return  # released before threshold, no feedback needed
+        from trezor import config
+        if not config.is_unlocked():
+            return  # device is locked, no feedback needed
+        if utils.USE_RGB_LED:
+            io.rgb_led.rgb_led_set_color(_POWER_HOLD_RGBLED_RED)
+        await loop.sleep(200)
+        if utils.USE_RGB_LED:
+            io.rgb_led.rgb_led_set_color(0)
 
     def _handle_power_button_press() -> None:
-        """Handle power button press event during firmware operation."""
+        """Handle power button short press — sleep without locking."""
         from apps.common.lock_manager import notify_suspend
 
         notify_suspend()
+
+    def _handle_power_button_long_press() -> None:
+        """Handle power button long press (>=750ms) — lock immediately + blink red."""
+        from apps.common.lock_manager import signal_long_press_lock
+
+        signal_long_press_lock()
 
 
 class Layout(Generic[T]):
@@ -460,9 +487,20 @@ class Layout(Generic[T]):
                     event = yield button
                     if utils.USE_POWER_MANAGER:
                         event_type, event_button = event
-                        # check for POWER_BUTTON (2), BUTTON_UP (0)
-                        if event_button == 2 and event_type == 0:
-                            _handle_power_button_press()
+                        if event_button == 2:
+                            if event_type == 1:  # BUTTON_DOWN
+                                global _power_btn_down_ms, _power_btn_held
+                                _power_btn_down_ms = _utime.ticks_ms()
+                                _power_btn_held = True
+                                loop.schedule(_power_hold_feedback())
+                            elif event_type == 0:  # BUTTON_UP
+                                global _power_btn_held
+                                _power_btn_held = False
+                                held = _utime.ticks_diff(_utime.ticks_ms(), _power_btn_down_ms)
+                                if held >= _POWER_BTN_HOLD_LOCK_MS:
+                                    _handle_power_button_long_press()
+                                else:
+                                    _handle_power_button_press()
                     workflow.idle_timer.touch()
                     self._event(self.layout.button_event, *event)
             except Shutdown:

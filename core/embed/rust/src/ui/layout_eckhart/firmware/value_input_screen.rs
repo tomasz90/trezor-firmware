@@ -490,8 +490,10 @@ impl ValueInput for DurationInput {
             }
         }
 
-        // This should never be reached unless duration is exactly 0
-        (0, None)
+        // duration is exactly 0 — show "OFF" as the label
+        let off_label =
+            TString::from_translation(TR::words__off).map(|s| ShortString::try_from(s).unwrap_or_default());
+        (0, Some(off_label))
     }
 
     fn increment(&mut self) {
@@ -520,6 +522,109 @@ impl DurationInput {
             min: min_crop,
             max: max_crop,
         }
+    }
+}
+
+/// Steps for battery auto-lock picker (30s … 1 hour).
+pub const AUTO_LOCK_BATT_STEPS_MS: &[u32] = &[
+    30_000,         // 30 seconds
+    60_000,         // 1 minute
+    2 * 60_000,     // 2 minutes
+    5 * 60_000,     // 5 minutes
+    10 * 60_000,    // 10 minutes
+    20 * 60_000,    // 20 minutes
+    30 * 60_000,    // 30 minutes
+    60 * 60_000,    // 1 hour
+];
+
+/// Steps for USB auto-lock picker (1 minute … 8 hours).
+pub const AUTO_LOCK_USB_STEPS_MS: &[u32] = &[
+    60_000,             // 1 minute
+    2 * 60_000,         // 2 minutes
+    5 * 60_000,         // 5 minutes
+    10 * 60_000,        // 10 minutes
+    20 * 60_000,        // 20 minutes
+    30 * 60_000,        // 30 minutes
+    60 * 60_000,        // 1 hour
+    2 * 60 * 60_000,    // 2 hours
+    4 * 60 * 60_000,    // 4 hours
+    8 * 60 * 60_000,    // 8 hours
+];
+
+/// Steps for session timeout picker (OFF, 5 minutes … 1 hour).
+pub const SESSION_TIMEOUT_STEPS_MS: &[u32] = &[
+    0,                  // OFF
+    5 * 60_000,         // 5 minutes
+    10 * 60_000,        // 10 minutes
+    20 * 60_000,        // 20 minutes
+    30 * 60_000,        // 30 minutes
+    60 * 60_000,        // 1 hour
+];
+
+/// Fixed-step duration picker — cycles through a predefined list of ms values.
+pub struct SteppedDurationInput {
+    steps: &'static [u32],
+    current_idx: usize,
+}
+
+impl SteppedDurationInput {
+    pub fn new(steps: &'static [u32], current_ms: u32) -> Self {
+        let idx = steps
+            .iter()
+            .position(|&s| s == current_ms)
+            .unwrap_or(0);
+        Self { steps, current_idx: idx }
+    }
+}
+
+impl ValueInput for SteppedDurationInput {
+    fn num(&self) -> u32 {
+        self.steps[self.current_idx]
+    }
+
+    fn repr(&self) -> (u32, Option<ShortString>) {
+        let ms = self.steps[self.current_idx];
+        if ms == 0 {
+            let off = TString::from_translation(TR::words__off)
+                .map(|s| ShortString::try_from(s).unwrap_or_default());
+            return (0, Some(off));
+        }
+        if ms % (60 * 60_000) == 0 {
+            let h = ms / (60 * 60_000);
+            let plural = TString::from_translation(TR::plurals__lock_after_x_hours)
+                .map(|t| plural_form(t, h));
+            return (h, Some(plural));
+        }
+        if ms % 60_000 == 0 {
+            let m = ms / 60_000;
+            let plural = TString::from_translation(TR::plurals__lock_after_x_minutes)
+                .map(|t| plural_form(t, m));
+            return (m, Some(plural));
+        }
+        let s = ms / 1_000;
+        let plural = TString::from_translation(TR::plurals__lock_after_x_seconds)
+            .map(|t| plural_form(t, s));
+        (s, Some(plural))
+    }
+
+    fn increment(&mut self) {
+        if self.current_idx < self.steps.len() - 1 {
+            self.current_idx += 1;
+        }
+    }
+
+    fn decrement(&mut self) {
+        if self.current_idx > 0 {
+            self.current_idx -= 1;
+        }
+    }
+
+    fn is_max(&self) -> bool {
+        self.current_idx == self.steps.len() - 1
+    }
+
+    fn is_min(&self) -> bool {
+        self.current_idx == 0
     }
 }
 

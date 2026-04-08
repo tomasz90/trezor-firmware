@@ -36,6 +36,7 @@ pub enum DeviceMenuMsg {
     SetOrChangeWipeCode,
     RemoveWipeCode,
     CheckBackup,
+    SetSessionTimeout,
 
     // Device menu
     SetDeviceName,
@@ -84,6 +85,7 @@ unsafe extern "C" fn device_menu_result_attr(_self_in: Obj, attr: ffi::qstr, des
             Qstr::MP_QSTR_SetOrChangeWipeCode => DeviceMenuMsg::SetOrChangeWipeCode.as_obj(),
             Qstr::MP_QSTR_RemoveWipeCode => DeviceMenuMsg::RemoveWipeCode.as_obj(),
             Qstr::MP_QSTR_CheckBackup => DeviceMenuMsg::CheckBackup.as_obj(),
+            Qstr::MP_QSTR_SetSessionTimeout => DeviceMenuMsg::SetSessionTimeout.as_obj(),
             Qstr::MP_QSTR_SetDeviceName => DeviceMenuMsg::SetDeviceName.as_obj(),
             Qstr::MP_QSTR_SetBrightness => DeviceMenuMsg::SetBrightness.as_obj(),
             Qstr::MP_QSTR_ToggleHaptics => DeviceMenuMsg::ToggleHaptics.as_obj(),
