@@ -25,8 +25,8 @@ docker run \
   "$NIX" --run "
     cd /reproducible-build/trezor-firmware
     git remote add local /local 2>/dev/null || git remote set-url local /local
-    git fetch local
-    git reset --hard local/main
+    git fetch local HEAD
+    git reset --hard FETCH_HEAD
     git submodule update --init --recursive
     uv sync --locked
   " || (docker rm dev-build-update 2>/dev/null; exit 1)
