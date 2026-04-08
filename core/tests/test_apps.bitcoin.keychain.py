@@ -5,22 +5,16 @@ from storage import cache_common
 from trezor import wire
 from trezor.crypto import bip39
 from trezor.wire import context
-from trezor.wire.codec.codec_context import CodecContext
 
 from apps.bitcoin.keychain import _get_coin_by_name, _get_keychain_for_coin
 
-if utils.USE_THP:
-    import thp_common
-else:
+if not utils.USE_THP:
     from storage import cache_codec
 
 
-class TestBitcoinKeychain(unittest.TestCase):
+class TestBitcoinKeychain(TestCaseWithContext):
 
     if utils.USE_THP:
-
-        def setUpClass(self):
-            thp_common.prepare_context()
 
         def setUp(self):
             seed = bip39.seed(" ".join(["all"] * 12), "")
@@ -28,16 +22,10 @@ class TestBitcoinKeychain(unittest.TestCase):
 
     else:
 
-        def setUpClass(self):
-            context.CURRENT_CONTEXT = CodecContext(None, bytearray(64))
-
         def setUp(self):
             cache_codec.start_session()
             seed = bip39.seed(" ".join(["all"] * 12), "")
             cache_codec.get_active_session().set(cache_common.APP_COMMON_SEED, seed)
-
-    def tearDownClass(self):
-        context.CURRENT_CONTEXT = None
 
     def test_bitcoin(self):
         coin = _get_coin_by_name("Bitcoin")
@@ -113,11 +101,8 @@ class TestBitcoinKeychain(unittest.TestCase):
 
 
 @unittest.skipUnless(not utils.BITCOIN_ONLY, "altcoin")
-class TestAltcoinKeychains(unittest.TestCase):
+class TestAltcoinKeychains(TestCaseWithContext):
     if utils.USE_THP:
-
-        def setUpClass(self):
-            thp_common.prepare_context()
 
         def setUp(self):
             seed = bip39.seed(" ".join(["all"] * 12), "")
@@ -125,16 +110,10 @@ class TestAltcoinKeychains(unittest.TestCase):
 
     else:
 
-        def setUpClass(self):
-            context.CURRENT_CONTEXT = CodecContext(None, bytearray(64))
-
         def setUp(self):
             cache_codec.start_session()
             seed = bip39.seed(" ".join(["all"] * 12), "")
             cache_codec.get_active_session().set(cache_common.APP_COMMON_SEED, seed)
-
-    def tearDownClass(self):
-        context.CURRENT_CONTEXT = None
 
     def test_bcash(self):
         coin = _get_coin_by_name("Bcash")

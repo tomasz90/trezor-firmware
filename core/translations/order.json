@@ -1206,6 +1206,9 @@
   "1204": "ethereum__withdraw_from",
   "1205": "ethereum__withdraw_intro",
   "1206": "ethereum__your_address",
+  "1207": "cardano__credential_intro_template",
+  "1208": "cardano__key_path",
+  "1206": "ethereum__your_address",
   "1207": "session_timeout__title",
   "1208": "session_timeout__info",
   "1209": "session_timeout__confirm_desc"
