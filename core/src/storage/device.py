@@ -77,7 +77,7 @@ if utils.USE_POWER_MANAGER:
     AUTODIM_DELAY_MS = 30 * 1000  # 30 seconds
     AUTOLOCK_DELAY_BATT_MIN_MS = 30 * 1000  # 30 seconds
     AUTOLOCK_DELAY_BATT_DEFAULT_MS = const(40 * 1000)  # 40 seconds
-    AUTOLOCK_DELAY_BATT_MAX_MS = const(60 * 60 * 1000)  # 1 hour
+    AUTOLOCK_DELAY_BATT_MAX_MS = const(10 * 60 * 1000)  # 10 minutes
 
 
 # Length of SD salt auth tag.
@@ -333,7 +333,6 @@ def set_autolock_delay_ms(delay_ms: int) -> None:
 
 
 _SESSION_TIMEOUT_MIN_MS = const(5 * 60 * 1000)  # 5 minutes — smallest valid step
-
 
 def get_session_timeout_ms() -> int:
     b = common.get(_NAMESPACE, _SESSION_TIMEOUT_MS)

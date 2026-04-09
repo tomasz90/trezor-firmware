@@ -138,13 +138,13 @@ if utils.USE_POWER_MANAGER:
             io.rgb_led.rgb_led_set_color(0)
 
     def _handle_power_button_press() -> None:
-        """Handle power button short press — sleep without locking."""
+        """Handle power button press event during firmware operation."""
         from apps.common.lock_manager import notify_suspend
 
         notify_suspend()
 
     def _handle_power_button_long_press() -> None:
-        """Handle power button long press (>=750ms) — lock immediately + blink red."""
+        """Handle power button long press (>=750ms) — lock immediately + blink red when session enabled."""
         from apps.common.lock_manager import signal_long_press_lock
 
         signal_long_press_lock()

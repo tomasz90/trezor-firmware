@@ -388,7 +388,7 @@ impl DeviceMenuScreen {
         let pin_unset = pin_enabled == Some(false);
         screen.register_root_menu(backup_failed, backup_needed, pin_unset, connected_subtext);
 
-        // Activate the init submenu (fall back to Root if the requested submenu is not registered)
+        // Activate the init submenu
         let init_submenu_id = init_submenu_idx
             .and_then(DeviceMenuId::from_u8)
             .unwrap_or_default();
@@ -563,7 +563,6 @@ impl DeviceMenuScreen {
         items.add(usb_delay);
 
         if let Some(timeout_str) = session_timeout_str {
-            // Display like autolock items: value (duration) as title, "Session" as subtext
             let session_item = MenuItem::new(
                 timeout_str,
                 Some(Action::Return(DeviceMenuMsg::SetSessionTimeout)),

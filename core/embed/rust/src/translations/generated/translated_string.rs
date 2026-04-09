@@ -1607,9 +1607,9 @@ pub enum TranslatedString {
     cardano__credential_intro_template = 1207,  // "{0} credential is a {1}"
     #[cfg(feature = "universal_fw")]
     cardano__key_path = 1208,  // "Key path"
-    session_timeout__title = 1207,  // {"Bolt": "", "Caesar": "", "Delizia": "", "Eckhart": "Session"}
-    session_timeout__info = 1208,  // {"Bolt": "", "Caesar": "", "Delizia": "", "Eckhart": "Keep device unlocked, so you can complete a sequence of transactions without re-entering your PIN. Auto-lock still applies. Hold power button to lock immediately."}
-    session_timeout__confirm_desc = 1209,  // {"Bolt": "", "Caesar": "", "Delizia": "", "Eckhart": "Do you want to enable session? This mode is useful to make a sequence of transactions without the need to re-enter PIN. It will also change behavior of Trezor, clicking power button, will only lock the screen, to lock device hold power button for 1 second."}
+    session_timeout__title = 1209,  // {"Bolt": "", "Caesar": "", "Delizia": "", "Eckhart": "Session"}
+    session_timeout__info = 1210,  // {"Bolt": "", "Caesar": "", "Delizia": "", "Eckhart": "Session will ease doing sequence of transactions. Set the time after Trezor will lock itself."}
+    session_timeout__confirm_desc = 1211,  // {"Bolt": "", "Caesar": "", "Delizia": "", "Eckhart": "Do you want to enable session? This mode is useful to make a sequence of transactions without the need to re-enter PIN. It will also change behavior of Trezor, clicking power button, will only lock the screen, to lock device hold power button for 1 second."}
 }
 
 impl TranslatedString {
@@ -2826,6 +2826,9 @@ impl TranslatedString {
                 "Your address",
                 "{0} credential is a {1}",
                 "Key path",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(feature = "debug", feature = "universal_fw"))]
@@ -4040,9 +4043,9 @@ impl TranslatedString {
                 21840,
                 21863,
                 21871,
-                21878,
-                21878,
-                21878,
+                21871,
+                21871,
+                21871,
             ];
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -5256,6 +5259,9 @@ impl TranslatedString {
                 "Your address",
                 "{0} credential is a {1}",
                 "Key path",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -6470,9 +6476,9 @@ impl TranslatedString {
                 21840,
                 21863,
                 21871,
-                21878,
-                21878,
-                21878,
+                21871,
+                21871,
+                21871,
             ];
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -7686,6 +7692,9 @@ impl TranslatedString {
                 "Your address",
                 "{0} credential is a {1}",
                 "Key path",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -8900,9 +8909,9 @@ impl TranslatedString {
                 21840,
                 21863,
                 21871,
-                21878,
-                21878,
-                21878,
+                21871,
+                21871,
+                21871,
             ];
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -10116,6 +10125,9 @@ impl TranslatedString {
                 "Your address",
                 "{0} credential is a {1}",
                 "Key path",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -11330,9 +11342,9 @@ impl TranslatedString {
                 21840,
                 21863,
                 21871,
-                21878,
-                21878,
-                21878,
+                21871,
+                21871,
+                21871,
             ];
 
         } else if #[cfg(feature = "layout_caesar")] {
@@ -12547,6 +12559,9 @@ impl TranslatedString {
                 "Your address",
                 "{0} credential is a {1}",
                 "Key path",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(feature = "debug", feature = "universal_fw"))]
@@ -13761,9 +13776,9 @@ impl TranslatedString {
                 19068,
                 19091,
                 19099,
-                19106,
-                19106,
-                19106,
+                19099,
+                19099,
+                19099,
             ];
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -14977,6 +14992,9 @@ impl TranslatedString {
                 "Your address",
                 "{0} credential is a {1}",
                 "Key path",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -16191,9 +16209,9 @@ impl TranslatedString {
                 19068,
                 19091,
                 19099,
-                19106,
-                19106,
-                19106,
+                19099,
+                19099,
+                19099,
             ];
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -17407,6 +17425,9 @@ impl TranslatedString {
                 "Your address",
                 "{0} credential is a {1}",
                 "Key path",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -18621,9 +18642,9 @@ impl TranslatedString {
                 19068,
                 19091,
                 19099,
-                19106,
-                19106,
-                19106,
+                19099,
+                19099,
+                19099,
             ];
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -19837,6 +19858,9 @@ impl TranslatedString {
                 "Your address",
                 "{0} credential is a {1}",
                 "Key path",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -21051,9 +21075,9 @@ impl TranslatedString {
                 19068,
                 19091,
                 19099,
-                19106,
-                19106,
-                19106,
+                19099,
+                19099,
+                19099,
             ];
 
         } else if #[cfg(feature = "layout_delizia")] {
@@ -22268,6 +22292,9 @@ impl TranslatedString {
                 "Your address",
                 "{0} credential is a {1}",
                 "Key path",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(feature = "debug", feature = "universal_fw"))]
@@ -23482,9 +23509,9 @@ impl TranslatedString {
                 20924,
                 20947,
                 20955,
-                20962,
-                20962,
-                20962,
+                20955,
+                20955,
+                20955,
             ];
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -24698,6 +24725,9 @@ impl TranslatedString {
                 "Your address",
                 "{0} credential is a {1}",
                 "Key path",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -25912,9 +25942,9 @@ impl TranslatedString {
                 20924,
                 20947,
                 20955,
-                20962,
-                20962,
-                20962,
+                20955,
+                20955,
+                20955,
             ];
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -27128,6 +27158,9 @@ impl TranslatedString {
                 "Your address",
                 "{0} credential is a {1}",
                 "Key path",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -28342,9 +28375,9 @@ impl TranslatedString {
                 20924,
                 20947,
                 20955,
-                20962,
-                20962,
-                20962,
+                20955,
+                20955,
+                20955,
             ];
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -29558,6 +29591,9 @@ impl TranslatedString {
                 "Your address",
                 "{0} credential is a {1}",
                 "Key path",
+                "",
+                "",
+                "",
             );
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -30772,9 +30808,9 @@ impl TranslatedString {
                 20924,
                 20947,
                 20955,
-                20962,
-                20962,
-                20962,
+                20955,
+                20955,
+                20955,
             ];
 
         } else if #[cfg(feature = "layout_eckhart")] {
@@ -31990,7 +32026,7 @@ impl TranslatedString {
                 "{0} credential is a {1}",
                 "Key path",
                 "Session",
-                "Auto-lock after no activity",
+                "Session will ease doing sequence of transactions. Set the time after Trezor will lock itself.",
                 "Do you want to enable session? This mode is useful to make a sequence of transactions without the need to re-enter PIN. It will also change behavior of Trezor, clicking power button, will only lock the screen, to lock device hold power button for 1 second.",
             );
 
@@ -33206,9 +33242,9 @@ impl TranslatedString {
                 21851,
                 21874,
                 21882,
-                21896,
-                21923,
-                22179,
+                21889,
+                21982,
+                22238,
             ];
 
             #[cfg(all(feature = "debug", not(feature = "universal_fw")))]
@@ -34423,7 +34459,7 @@ impl TranslatedString {
                 "{0} credential is a {1}",
                 "Key path",
                 "Session",
-                "Auto-lock after no activity",
+                "Session will ease doing sequence of transactions. Set the time after Trezor will lock itself.",
                 "Do you want to enable session? This mode is useful to make a sequence of transactions without the need to re-enter PIN. It will also change behavior of Trezor, clicking power button, will only lock the screen, to lock device hold power button for 1 second.",
             );
 
@@ -35639,9 +35675,9 @@ impl TranslatedString {
                 21851,
                 21874,
                 21882,
-                21896,
-                21923,
-                22179,
+                21889,
+                21982,
+                22238,
             ];
 
             #[cfg(all(not(feature = "debug"), feature = "universal_fw"))]
@@ -36856,7 +36892,7 @@ impl TranslatedString {
                 "{0} credential is a {1}",
                 "Key path",
                 "Session",
-                "Auto-lock after no activity",
+                "Session will ease doing sequence of transactions. Set the time after Trezor will lock itself.",
                 "Do you want to enable session? This mode is useful to make a sequence of transactions without the need to re-enter PIN. It will also change behavior of Trezor, clicking power button, will only lock the screen, to lock device hold power button for 1 second.",
             );
 
@@ -38072,9 +38108,9 @@ impl TranslatedString {
                 21851,
                 21874,
                 21882,
-                21896,
-                21923,
-                22179,
+                21889,
+                21982,
+                22238,
             ];
 
             #[cfg(all(not(feature = "debug"), not(feature = "universal_fw")))]
@@ -39289,7 +39325,7 @@ impl TranslatedString {
                 "{0} credential is a {1}",
                 "Key path",
                 "Session",
-                "Auto-lock after no activity",
+                "Session will ease doing sequence of transactions. Set the time after Trezor will lock itself.",
                 "Do you want to enable session? This mode is useful to make a sequence of transactions without the need to re-enter PIN. It will also change behavior of Trezor, clicking power button, will only lock the screen, to lock device hold power button for 1 second.",
             );
 
@@ -40505,9 +40541,9 @@ impl TranslatedString {
                 21851,
                 21874,
                 21882,
-                21896,
-                21923,
-                22179,
+                21889,
+                21982,
+                22238,
             ];
 
         }
@@ -41697,9 +41733,9 @@ impl TranslatedString {
         (Qstr::MP_QSTR_send__transaction_id, Self::send__transaction_id),
         (Qstr::MP_QSTR_send__transaction_signed, Self::send__transaction_signed),
         (Qstr::MP_QSTR_send__you_are_contributing, Self::send__you_are_contributing),
-        (Qstr::MP_QSTR_session_timeout__title, Self::session_timeout__title),
-        (Qstr::MP_QSTR_session_timeout__info, Self::session_timeout__info),
         (Qstr::MP_QSTR_session_timeout__confirm_desc, Self::session_timeout__confirm_desc),
+        (Qstr::MP_QSTR_session_timeout__info, Self::session_timeout__info),
+        (Qstr::MP_QSTR_session_timeout__title, Self::session_timeout__title),
         (Qstr::MP_QSTR_setting__adjust, Self::setting__adjust),
         (Qstr::MP_QSTR_setting__apply, Self::setting__apply),
         (Qstr::MP_QSTR_share_words__words_in_order, Self::share_words__words_in_order),

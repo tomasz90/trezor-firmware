@@ -490,10 +490,8 @@ impl ValueInput for DurationInput {
             }
         }
 
-        // duration is exactly 0 — show "OFF" as the label
-        let off_label =
-            TString::from_translation(TR::words__off).map(|s| ShortString::try_from(s).unwrap_or_default());
-        (0, Some(off_label))
+        // This should never be reached unless duration is exactly 0
+        (0, None)
     }
 
     fn increment(&mut self) {
@@ -524,32 +522,6 @@ impl DurationInput {
         }
     }
 }
-
-/// Steps for battery auto-lock picker (30s … 1 hour).
-pub const AUTO_LOCK_BATT_STEPS_MS: &[u32] = &[
-    30_000,         // 30 seconds
-    60_000,         // 1 minute
-    2 * 60_000,     // 2 minutes
-    5 * 60_000,     // 5 minutes
-    10 * 60_000,    // 10 minutes
-    20 * 60_000,    // 20 minutes
-    30 * 60_000,    // 30 minutes
-    60 * 60_000,    // 1 hour
-];
-
-/// Steps for USB auto-lock picker (1 minute … 8 hours).
-pub const AUTO_LOCK_USB_STEPS_MS: &[u32] = &[
-    60_000,             // 1 minute
-    2 * 60_000,         // 2 minutes
-    5 * 60_000,         // 5 minutes
-    10 * 60_000,        // 10 minutes
-    20 * 60_000,        // 20 minutes
-    30 * 60_000,        // 30 minutes
-    60 * 60_000,        // 1 hour
-    2 * 60 * 60_000,    // 2 hours
-    4 * 60 * 60_000,    // 4 hours
-    8 * 60 * 60_000,    // 8 hours
-];
 
 /// Steps for session timeout picker (OFF, 5 minutes … 1 hour).
 pub const SESSION_TIMEOUT_STEPS_MS: &[u32] = &[

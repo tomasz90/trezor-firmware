@@ -678,21 +678,6 @@ impl FirmwareUI for UIDelizia {
         Err::<RootComponent<Empty, ModelUI>, Error>(Error::NotImplementedError)
     }
 
-    fn request_auto_lock_duration(
-        _title: TString<'static>,
-        _current_ms: u32,
-        _battery: bool,
-    ) -> Result<impl LayoutMaybeTrace, Error> {
-        Err::<RootComponent<Empty, ModelUI>, Error>(Error::NotImplementedError)
-    }
-
-    fn request_session_timeout(
-        _title: TString<'static>,
-        _current_ms: u32,
-    ) -> Result<impl LayoutMaybeTrace, Error> {
-        Err::<RootComponent<Empty, ModelUI>, Error>(Error::NotImplementedError)
-    }
-
     fn request_pin(
         prompt: TString<'static>,
         attempts: TString<'static>,
@@ -717,6 +702,13 @@ impl FirmwareUI for UIDelizia {
     ) -> Result<impl LayoutMaybeTrace, Error> {
         let flow = flow::request_passphrase::new_request_passphrase(prompt, prompt_empty, max_len)?;
         Ok(flow)
+    }
+
+    fn request_session_timeout(
+        _title: TString<'static>,
+        _current_ms: u32,
+    ) -> Result<impl LayoutMaybeTrace, Error> {
+        Err::<RootComponent<Empty, ModelUI>, Error>(Error::NotImplementedError)
     }
 
     fn request_string(

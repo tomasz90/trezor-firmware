@@ -127,6 +127,7 @@ async def handle_device_menu() -> None:
 
         firmware_type = "Bitcoin-only" if utils.BITCOIN_ONLY else "Universal"
         production_year = _get_production_year()
+
         menu_result = await interact(
             trezorui_api.show_device_menu(
                 init_submenu_idx=init_submenu_idx,
@@ -312,18 +313,26 @@ async def handle_SetAutoLockUSB() -> None:
 
     utils.ensure(config.has_pin())
 
+    duration_ms = storage_device.get_autolock_delay_ms()
+    min_ms = storage_device.AUTOLOCK_DELAY_USB_MIN_MS
+    max_ms = storage_device.AUTOLOCK_DELAY_USB_MAX_MS
+
     auto_lock_delay_ms = await interact(
         trezorui_api.request_duration(
             title=TR.auto_lock__title,
-            duration_ms=storage_device.get_autolock_delay_ms(),
-            min_ms=storage_device.AUTOLOCK_DELAY_USB_MIN_MS,
-            max_ms=storage_device.AUTOLOCK_DELAY_USB_MAX_MS,
+            duration_ms=duration_ms,
+            min_ms=min_ms,
+            max_ms=max_ms,
             description=TR.auto_lock__description,
         ),
         br_name=None,
     )
+    # Necessary for the style check not to raise type error
     assert isinstance(auto_lock_delay_ms, int)
-    await apply_settings(ApplySettings(auto_lock_delay_ms=auto_lock_delay_ms))
+    settings = ApplySettings(
+        auto_lock_delay_ms=auto_lock_delay_ms,
+    )
+    await apply_settings(settings)
 
 
 async def handle_SetAutoLockBattery() -> None:
@@ -333,18 +342,26 @@ async def handle_SetAutoLockBattery() -> None:
 
     utils.ensure(config.has_pin())
 
+    duration_ms = storage_device.get_autolock_delay_battery_ms()
+    min_ms = storage_device.AUTOLOCK_DELAY_BATT_MIN_MS
+    max_ms = storage_device.AUTOLOCK_DELAY_BATT_MAX_MS
+
     auto_lock_delay_ms = await interact(
         trezorui_api.request_duration(
             title=TR.auto_lock__title,
-            duration_ms=storage_device.get_autolock_delay_battery_ms(),
-            min_ms=storage_device.AUTOLOCK_DELAY_BATT_MIN_MS,
-            max_ms=storage_device.AUTOLOCK_DELAY_BATT_MAX_MS,
+            duration_ms=duration_ms,
+            min_ms=min_ms,
+            max_ms=max_ms,
             description=TR.auto_lock__description,
         ),
         br_name=None,
     )
+    # Necessary for the style check not to raise type error
     assert isinstance(auto_lock_delay_ms, int)
-    await apply_settings(ApplySettings(auto_lock_delay_battery_ms=auto_lock_delay_ms))
+    settings = ApplySettings(
+        auto_lock_delay_battery_ms=auto_lock_delay_ms,
+    )
+    await apply_settings(settings)
 
 
 async def handle_SetSessionTimeout() -> None:
@@ -368,7 +385,6 @@ async def handle_SetSessionTimeout() -> None:
                 title=TR.session_timeout__title,
                 action=None,
                 description=TR.session_timeout__confirm_desc,
-                verb=TR.buttons__confirm,
             ),
             "set_session_timeout",
             ButtonRequestType.ProtectCall,

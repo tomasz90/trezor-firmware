@@ -91,7 +91,7 @@ else:
         _notify_power_button.put(None, replace=True)
 
     async def _power_handler() -> None:
-        """Handler for the notify_suspend signal (short power button press)."""
+        """Handler for the notify_suspend signal."""
         while True:
             await _notify_power_button
             if _session_is_valid():
@@ -156,7 +156,7 @@ else:
             lock_device_if_unlocked()
 
     def lock_device_if_unlocked_on_battery() -> None:
-        """Battery idle timeout: suspend screen if session is active, lock device if not."""
+        """Lock the device if it is unlocked and running on battery or wireless charger."""
         if io.pm.is_usb_connected():
             return
         if _session_is_valid():
@@ -279,12 +279,12 @@ def _pinlock_filter(msg_type: int, prev_handler: Handler[Msg]) -> Handler[Msg]:
     return wrapper
 
 
-# this function is also called when handling ApplySettings
 def _lock_on_session_timeout() -> None:
     """Lock the device when the session idle timer expires."""
     lock_device_if_unlocked()
 
 
+# this function is also called when handling ApplySettings
 def reload_settings_from_storage() -> None:
     from trezor import ui
 

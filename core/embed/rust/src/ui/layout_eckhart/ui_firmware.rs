@@ -41,12 +41,12 @@ use crate::ui::component::{BLEHandler, BLEHandlerMode};
 use super::{
     component::Button,
     firmware::{
-        AUTO_LOCK_BATT_STEPS_MS, AUTO_LOCK_USB_STEPS_MS, SESSION_TIMEOUT_STEPS_MS, ActionBar, Bip39Input, ConfirmHomescreen,
-        DeviceMenuScreen, DurationInput, Header, HeaderMsg, Hint, Homescreen, LabelInput,
-        MnemonicKeyboard, PinKeyboard, ProgressScreen, SelectWordCountScreen, SelectWordScreen,
-        SetBrightnessScreen, ShortMenuVec, Slip39Input, SteppedDurationInput, StringKeyboard,
-        TextScreen, TextScreenMsg, ValueInputScreen, VerticalMenu, VerticalMenuScreen,
-        VerticalMenuScreenMsg,
+        ActionBar, Bip39Input, ConfirmHomescreen, DeviceMenuScreen, DurationInput, Header,
+        HeaderMsg, Hint, Homescreen, LabelInput, MnemonicKeyboard, PinKeyboard, ProgressScreen,
+        SelectWordCountScreen, SelectWordScreen, SetBrightnessScreen, ShortMenuVec, Slip39Input,
+        StringKeyboard, TextScreen, TextScreenMsg, ValueInputScreen, VerticalMenu,
+        VerticalMenuScreen, VerticalMenuScreenMsg,
+        SteppedDurationInput, SESSION_TIMEOUT_STEPS_MS,
     },
     flow, fonts,
     theme::{
@@ -80,10 +80,10 @@ impl FirmwareUI for UIEckhart {
             if !reverse {
                 paragraphs
                     .add(Paragraph::new(&theme::TEXT_REGULAR, action))
-                    .add(Paragraph::new(&theme::firmware::TEXT_MEDIUM, description));
+                    .add(Paragraph::new(&theme::TEXT_REGULAR, description));
             } else {
                 paragraphs
-                    .add(Paragraph::new(&theme::firmware::TEXT_MEDIUM, description))
+                    .add(Paragraph::new(&theme::TEXT_REGULAR, description))
                     .add(Paragraph::new(&theme::TEXT_REGULAR, action));
             }
             paragraphs.into_paragraphs().with_placement(
@@ -105,7 +105,7 @@ impl FirmwareUI for UIEckhart {
                     .with_gradient(gradient)
                     .styled(style)
             }
-            (false, Some(verb)) => Button::with_text(verb).styled(button_confirm()),
+            (false, Some(verb)) => Button::with_text(verb),
             (false, None) => {
                 Button::with_text(TR::buttons__confirm.into()).styled(button_confirm())
             }
@@ -820,23 +820,6 @@ impl FirmwareUI for UIEckhart {
         let layout = RootComponent::new(component);
 
         Ok(layout)
-    }
-
-    fn request_auto_lock_duration(
-        title: TString<'static>,
-        current_ms: u32,
-        battery: bool,
-    ) -> Result<impl LayoutMaybeTrace, Error> {
-        let steps = if battery {
-            AUTO_LOCK_BATT_STEPS_MS
-        } else {
-            AUTO_LOCK_USB_STEPS_MS
-        };
-        let description = TString::from_translation(TR::auto_lock__description);
-        let component =
-            ValueInputScreen::new(SteppedDurationInput::new(steps, current_ms), description)
-                .with_header(Header::new(title));
-        Ok(RootComponent::new(component))
     }
 
     fn request_session_timeout(

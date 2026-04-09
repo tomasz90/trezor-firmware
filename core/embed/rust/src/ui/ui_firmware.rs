@@ -253,12 +253,6 @@ pub trait FirmwareUI {
         description: Option<TString<'static>>,
     ) -> Result<impl LayoutMaybeTrace, Error>;
 
-    fn request_auto_lock_duration(
-        title: TString<'static>,
-        current_ms: u32,
-        battery: bool,
-    ) -> Result<impl LayoutMaybeTrace, Error>;
-
     fn request_session_timeout(
         title: TString<'static>,
         current_ms: u32,

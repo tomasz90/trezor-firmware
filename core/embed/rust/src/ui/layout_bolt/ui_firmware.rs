@@ -689,21 +689,6 @@ impl FirmwareUI for UIBolt {
         Err::<RootComponent<Empty, ModelUI>, Error>(Error::NotImplementedError)
     }
 
-    fn request_auto_lock_duration(
-        _title: TString<'static>,
-        _current_ms: u32,
-        _battery: bool,
-    ) -> Result<impl LayoutMaybeTrace, Error> {
-        Err::<RootComponent<Empty, ModelUI>, Error>(Error::NotImplementedError)
-    }
-
-    fn request_session_timeout(
-        _title: TString<'static>,
-        _current_ms: u32,
-    ) -> Result<impl LayoutMaybeTrace, Error> {
-        Err::<RootComponent<Empty, ModelUI>, Error>(Error::NotImplementedError)
-    }
-
     fn request_pin(
         prompt: TString<'static>,
         attempts: TString<'static>,
@@ -727,6 +712,13 @@ impl FirmwareUI for UIBolt {
     ) -> Result<impl LayoutMaybeTrace, Error> {
         let layout = RootComponent::new(PassphraseKeyboard::new(max_len));
         Ok(layout)
+    }
+
+    fn request_session_timeout(
+        _title: TString<'static>,
+        _current_ms: u32,
+    ) -> Result<impl LayoutMaybeTrace, Error> {
+        Err::<RootComponent<Empty, ModelUI>, Error>(Error::NotImplementedError)
     }
 
     fn request_string(

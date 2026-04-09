@@ -476,16 +476,6 @@ def request_duration(
 
 
 # rust/src/ui/api/firmware_micropython.rs
-def request_auto_lock_duration(
-    *,
-    title: str,
-    current_ms: int,
-    battery: bool = False,
-) -> LayoutObj[tuple[UiResult, int]]:
-    """Stepped duration picker for auto-lock (battery or USB presets)."""
-
-
-# rust/src/ui/api/firmware_micropython.rs
 def request_pin(
     *,
     prompt: str,
